@@ -151,13 +151,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void confirmDetails() {
         final ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
-        /*
+
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage("Loading...");
         dialog.setIndeterminate(true);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
-        */
+
         try {
             post(new Callback() {
                 @Override
