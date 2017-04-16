@@ -10,6 +10,17 @@
 
     android:background="#ffffff">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Loginpage credits:Sheik Araf "
+        android:textColor="#D2D2D2"
+        android:id="@+id/textView2"
+        android:singleLine="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -57,15 +68,4 @@
             android:background="@drawable/button_default_bg"
             />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Loginpage credits:Sheik Araf "
-        android:textColor="#D2D2D2"
-        android:id="@+id/textView2"
-        android:singleLine="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
 </RelativeLayout>
