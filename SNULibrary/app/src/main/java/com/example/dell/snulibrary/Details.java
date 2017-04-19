@@ -1,31 +1,38 @@
 package com.example.dell.snulibrary;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.content.Intent;
-import android.widget.EditText;
-import android.widget.Toast;
-import android.util.Log;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import java.security.AccessControlContext;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.LayoutInflater;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import org.jsoup.nodes.Document;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-public class Details extends AppCompatActivity {
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class Details extends AppCompatActivity implements OnClickListener{
 
     String Netid, pass;
     Boolean connected;
     private String tableHTML = null;
     EditText book;
+    String name,rno;
     //View view=null;
+
+    private static final String REGISTER_URL = "http://10.6.11.171/SNU_Library/register.php";
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +42,11 @@ public class Details extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         book=(EditText)findViewById(R.id.editText);
 
+        button = (Button) findViewById(R.id.button);
 
-        //bookname=R.layout.activity_details.
+        button.setOnClickListener(this);
+
+       // book= (EditText) findViewById(R.id.editText);
 
 
 
@@ -44,11 +54,20 @@ public class Details extends AppCompatActivity {
         if (extras != null) {
             Netid = extras.getString("username");
             pass = extras.getString("password");
-            new myAsyncTask().execute();
+            new myAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
 
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view == button){
+            //register("1510110327","anurag",2,"harry","library");
+            String books = book.getText().toString().trim();
+            register(rno,name,50,books,"library");
+        }
     }
 
 
@@ -102,8 +121,8 @@ public class Details extends AppCompatActivity {
                     tableHTML = "<table>" + tableHTML + "</table>";
                   //  wv.loadDataWithBaseURL(null, tableHTML, "text/html", "utf-8", null);
                     String nametable = page.select("div[class=container]").get(1).text();
-                    String name = nametable.substring(nametable.indexOf(" ") + 1, nametable.indexOf("["));
-                    String rno = nametable.substring(nametable.indexOf("["), nametable.indexOf("]") + 1);
+                    name = nametable.substring(nametable.indexOf(" ") + 1, nametable.indexOf("["));
+                    rno = nametable.substring(nametable.indexOf("["), nametable.indexOf("]") + 1);
                     naam.setText((CharSequence)"Name:- " + name);
                     roll.setText((CharSequence)"Roll Number:- " + rno);
                 }
@@ -118,5 +137,55 @@ public class Details extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),(CharSequence)"(2)Network Communication Issues...Please try again later.", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void register(String rollnumber, String name, int token, String books, String b_details) {
+        String urlSuffix = "?rollnumber="+rollnumber+"&name="+name+"&tokennumber="+token+"&books="+books+"&bookdetails="+b_details;
+        String temp = urlSuffix;
+        temp = temp.replaceAll(" ", "%20");
+        System.out.println(temp);
+        class RegisterUser extends AsyncTask<String, Void, String>{
+
+            ProgressDialog loading;
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(Details.this, "Please Wait",null, true, true);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+                String s = params[0];
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(REGISTER_URL+s);
+                    System.out.println(url);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String result;
+
+                    result = bufferedReader.readLine();
+
+                    return result;
+                }catch(Exception e){
+                    return null;
+                }
+            }
+        }
+
+        RegisterUser ru = new RegisterUser();
+
+        ru.execute(temp);
+        //ru.execute(urlSuffix);
     }
 }
