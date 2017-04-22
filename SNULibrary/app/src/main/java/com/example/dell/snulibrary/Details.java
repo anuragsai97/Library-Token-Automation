@@ -1,6 +1,7 @@
 package com.example.dell.snulibrary;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,27 +29,33 @@ public class Details extends AppCompatActivity implements OnClickListener{
     String Netid, pass;
     Boolean connected;
     private String tableHTML = null;
+    String bookstatus;
     EditText book;
     String name,rno;
+
+
     //View view=null;
 
     private static final String REGISTER_URL = "http://10.6.11.171/SNU_Library/register.php";
     private Button button;
+    private boolean flagmale = false;
+    private boolean flagfemale = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String bookname;
         String preference;
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        book=(EditText)findViewById(R.id.editText);
+        book = (EditText) findViewById(R.id.editText);
 
         button = (Button) findViewById(R.id.button);
 
         button.setOnClickListener(this);
 
-       // book= (EditText) findViewById(R.id.editText);
-
+        // book= (EditText) findViewById(R.id.editText);
 
 
         Bundle extras = getIntent().getExtras();
@@ -57,7 +65,53 @@ public class Details extends AppCompatActivity implements OnClickListener{
             new myAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
+        final RadioButton btbook = (RadioButton) findViewById(R.id.radioButton2);
+        final RadioButton btbook1 = (RadioButton) findViewById(R.id.radioButton);
 
+
+
+
+        btbook.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if (btbook.isChecked()) {
+                    if (!flagmale) {
+                        btbook.setChecked(true);
+                        btbook1.setChecked(false);
+                        flagmale = true;
+                        flagfemale = false;
+                        bookstatus="personal";
+                    } else {
+                        flagmale = false;
+                        btbook.setChecked(false);
+                        btbook1.setChecked(false);
+                    }
+                }
+               // System.out.println(bookstatus);
+            }
+        });
+
+        btbook1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btbook1.isChecked()) {
+                    if (!flagfemale) {
+                        btbook1.setChecked(true);
+                        btbook.setChecked(false);
+                        flagfemale = true;
+                        flagmale = false;
+                        bookstatus="Library";
+                    } else {
+                        flagfemale = false;
+                        btbook1.setChecked(false);
+                        btbook.setChecked(false);
+                    }
+                }
+                //System.out.println(bookstatus);
+            }
+
+        });
 
     }
 
@@ -69,6 +123,7 @@ public class Details extends AppCompatActivity implements OnClickListener{
             register(rno,name,50,books,"library");
         }
     }
+
 
 
 
@@ -105,6 +160,7 @@ public class Details extends AppCompatActivity implements OnClickListener{
         protected void onPostExecute(Void aVoid) {
             TextView naam = (TextView) findViewById(R.id.textView5);
             TextView roll = (TextView) findViewById(R.id.textView);
+            System.out.println(bookstatus);
             /*
             WebView wv = (WebView) view.findViewById(R.id.webView1);
             wv.getSettings().setSupportZoom(true);
@@ -119,7 +175,7 @@ public class Details extends AppCompatActivity implements OnClickListener{
                     Element table = page.select("table[class=table table-bordered table-condensed table-striped]").first();
                     tableHTML = table.html();
                     tableHTML = "<table>" + tableHTML + "</table>";
-                  //  wv.loadDataWithBaseURL(null, tableHTML, "text/html", "utf-8", null);
+                    //  wv.loadDataWithBaseURL(null, tableHTML, "text/html", "utf-8", null);
                     String nametable = page.select("div[class=container]").get(1).text();
                     name = nametable.substring(nametable.indexOf(" ") + 1, nametable.indexOf("["));
                     rno = nametable.substring(nametable.indexOf("["), nametable.indexOf("]") + 1);
@@ -139,9 +195,11 @@ public class Details extends AppCompatActivity implements OnClickListener{
         }
     }
 
-    private void register(String rollnumber, String name, int token, String books, String b_details) {
+    private void register(String rollnumber, final String name, int token, String books, String b_details) {
         String urlSuffix = "?rollnumber="+rollnumber+"&name="+name+"&tokennumber="+token+"&books="+books+"&bookdetails="+b_details;
         String temp = urlSuffix;
+        final String n=name;
+        final String r=rollnumber;
         temp = temp.replaceAll(" ", "%20");
         System.out.println(temp);
         class RegisterUser extends AsyncTask<String, Void, String>{
@@ -160,6 +218,16 @@ public class Details extends AppCompatActivity implements OnClickListener{
                 super.onPostExecute(s);
                 loading.dismiss();
                 Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+                if(s.equals("<br />"))
+                {
+                    Intent submit= new Intent(getApplicationContext(),Submit.class);
+                    submit.putExtra("nam",n);
+                    submit.putExtra("rn",r);
+                    startActivity(submit);
+
+                }
+
+
             }
 
             @Override

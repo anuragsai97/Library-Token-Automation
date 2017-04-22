@@ -56,11 +56,11 @@ public class LoginActivity extends AppCompatActivity {
         password = sharedPreferences.getString("password", null);
 
         if(NetId != null && password != null){
-            Intent startMain = new Intent(getApplicationContext(), MainActivity.class);
+            Intent startMain = new Intent(getApplicationContext(), Details.class);
             startMain.putExtra("username", NetId);
             startMain.putExtra("password", password);
             startActivity(startMain);
-        }
+    }
 
         setContentView(R.layout.login);
 
@@ -173,16 +173,19 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         return;
                     }
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("username", NetId);
-                    editor.putString("password", password);
-                    editor.apply();
-                    Intent startMain = new Intent(getApplicationContext(), MainActivity.class);
-                    startMain.putExtra("username", NetId);
-                    startMain.putExtra("password", password);
-                    startMain.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    startActivity(startMain);
-                    finish();
+
+                    else {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("username", NetId);
+                        editor.putString("password", password);
+                        editor.apply();
+                        Intent startMain = new Intent(getApplicationContext(), Details.class);
+                        startMain.putExtra("username", NetId);
+                        startMain.putExtra("password", password);
+                        startMain.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        startActivity(startMain);
+                        finish();
+                    }
                 }
             });
         } catch (IOException e) {

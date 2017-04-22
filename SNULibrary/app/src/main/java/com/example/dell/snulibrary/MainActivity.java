@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+
     private class FetchPage extends AsyncTask<Void, Void, Void> {
         Document page = null;
 
