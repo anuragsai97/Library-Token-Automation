@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,6 +28,7 @@ import java.net.URL;
 public class Details extends AppCompatActivity implements OnClickListener{
 
     String Netid, pass;
+    String tok;
     Boolean connected;
     private String tableHTML = null;
     String bookstatus;
@@ -37,6 +39,7 @@ public class Details extends AppCompatActivity implements OnClickListener{
     //View view=null;
 
     private static final String REGISTER_URL = "http://10.6.11.171/SNU_Library/register.php";
+
     private Button button;
     private boolean flagmale = false;
     private boolean flagfemale = false;
@@ -121,6 +124,8 @@ public class Details extends AppCompatActivity implements OnClickListener{
             //register("1510110327","anurag",2,"harry","library");
             String books = book.getText().toString().trim();
             register(rno,name,50,books,"library");
+
+
         }
     }
 
@@ -216,11 +221,17 @@ public class Details extends AppCompatActivity implements OnClickListener{
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+                if(s.equals("<br />")){
+                    s="Registered Successfully";
+                }
                 loading.dismiss();
                 Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
-                if(s.equals("<br />"))
+
+                if(s.equals("Registered Successfully"))
                 {
+
                     Intent submit= new Intent(getApplicationContext(),Submit.class);
+                    submit.putExtra("tok",tok);
                     submit.putExtra("nam",n);
                     submit.putExtra("rn",r);
                     startActivity(submit);
@@ -256,4 +267,7 @@ public class Details extends AppCompatActivity implements OnClickListener{
         ru.execute(temp);
         //ru.execute(urlSuffix);
     }
+
+
+
 }

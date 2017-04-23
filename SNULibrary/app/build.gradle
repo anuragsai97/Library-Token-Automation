@@ -28,5 +28,6 @@ dependencies {
     compile 'com.android.support:design:25.1.0'
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.okhttp:okhttp:2.6.0'
+    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
 
 }
