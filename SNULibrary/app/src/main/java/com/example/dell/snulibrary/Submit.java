@@ -34,11 +34,11 @@ public class Submit extends AppCompatActivity implements View.OnClickListener{
     String tok;
     private Button buttonSubmit;
     private ProgressDialog loading;
-    private static final String DATA_URL ="http://10.6.11.171/SNU_Library/token.php?id=";
+    private static final String DATA_URL ="http://your-server-ip/SNU_Library/token.php?id=";
     public static final String JSON_ARRAY = "result";
     public static final String KEY_TOKEN = "token";
 
-    private static final String SUBMIT_URL = "http://10.6.11.171/SNU_Library/submit.php";
+    private static final String SUBMIT_URL = "http://your-server-ip/SNU_Library/submit.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
