@@ -38,7 +38,7 @@ public class Details extends AppCompatActivity implements OnClickListener{
 
     //View view=null;
 
-    private static final String REGISTER_URL = "http://10.6.11.171/SNU_Library/register.php";
+    private static final String REGISTER_URL = "http://your-server-ip/SNU_Library/register.php";
 
     private Button button;
     private boolean flagmale = false;
