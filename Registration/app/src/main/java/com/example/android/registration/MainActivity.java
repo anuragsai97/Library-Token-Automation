@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button buttonRegister;
 
-    private static final String REGISTER_URL = "http://10.6.11.171/registration/register.php";
+    private static final String REGISTER_URL = "http://your-server-ip/registration/register.php";
 
 
     @Override
